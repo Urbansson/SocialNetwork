@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/index.xhtml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/friends.xhtml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/src/java/se/social/rest/UserRestClient.java</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/WEB-INF/web.xml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/index2.xhtml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/src/java/se/social/data/UserPost.java</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/WEB-INF/faces-config.xml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/wall.xhtml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/welcomePrimefaces.xhtml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/src/java/se/social/data/UserMessage.java</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/src/java/se/social/beans/userBean.java</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/templates/main.xhtml</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/src/java/se/social/data/PostComment.java</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/src/java/se/social/data/UserData.java</file>
+            <file>file:/Users/Teddy/Documents/servernetbeans/SocialFrontend/web/messages.xhtml</file>
+        </group>
+    </open-files>
+</project-private>
