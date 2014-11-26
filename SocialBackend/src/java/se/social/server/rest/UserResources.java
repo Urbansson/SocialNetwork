@@ -5,6 +5,7 @@
  */
 package se.social.server.rest;
 
+import com.google.gson.Gson;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
@@ -13,6 +14,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import se.social.dao.UserDao;
+import se.social.data.UserData;
 
 /**
  * REST Web Service
@@ -36,37 +39,61 @@ public class UserResources {
      * @param password
      * @return an instance of java.lang.String
      */
+    
     @GET @Path("/login/{username}/{password}")
     @Produces("application/json")
     public String login(@PathParam("username") String userName, @PathParam("password") String password) {
         //TODO return proper representation object
         //throw new UnsupportedOperationException();
         
-        if ((userName.equals("teddy") && password.equals("password"))) {
-            return "{\"userName\":\"Urbansson\",\"firstName\":\"Teddy\",\"lastName\":\"Brandt\",\"email\":\"teddy@brandts.se\",\"password\":\"password\"}";
+        UserDao doa = new UserDao();
+        Gson gson = new Gson();
+        UserData user = doa.getUserByUsername(userName);
+        
+        if (user != null) {
+            if(user.getPassword().equals(password))
+                return gson.toJson(user, UserData.class);
         }
         return "{success: false}";
     }
     
-    
-        @GET @Path("/getuserbyname/{username}")
+    @GET @Path("/getuserbyname/{username}")
     @Produces("application/json")
     public String getUserByName(@PathParam("username") String userName) {
         //TODO return proper representation object
         //throw new UnsupportedOperationException();
+        UserDao doa = new UserDao();
+        Gson gson = new Gson();
+        UserData user = doa.getUserByUsername(userName);
         
-        if ((userName.equals("teddy"))) {
-            return "{\"userName\":\"Urbansson\",\"firstName\":\"Teddy\",\"lastName\":\"Brandt\",\"email\":\"teddy@brandts.se\",\"password\":\"password\"}";
+        if(user != null){
+            return gson.toJson(user, UserData.class);
+        }else{
+            return "{success: false}";
         }
-        return "{errorMessage: \"not found\"}";
     }
+    
+    @GET @Path("/getuserbyemail/{email}")
+    @Produces("application/json")
+    public String getUserByEmail(@PathParam("email") String email) {
+        //TODO return proper representation object
+        //throw new UnsupportedOperationException();
+        UserDao doa = new UserDao();
+        Gson gson = new Gson();
+        UserData user = doa.getUserByEmail(email);
+        
+        if(user != null){
+            return gson.toJson(user, UserData.class);
+        }else{
+            return "{success: false}";
+        }
+    }
+    
     /**
      *
      * @param content
      * @return
      */
-    
-    
     @PUT @Path("/register")
     @Consumes("application/json")
     @Produces("application/json")
@@ -74,6 +101,16 @@ public class UserResources {
         
         System.out.println("register recived recived: " + content);
         
-        return "{\"userName\":\"Urbansson\",\"firstName\":\"Teddy\",\"lastName\":\"Brandt\",\"email\":\"teddy@brandts.se\",\"password\":\"password\"}";
+        UserDao doa = new UserDao();
+       
+        Gson gson = new Gson();
+        UserData data = gson.fromJson(content, UserData.class);
+
+        //doa.registerNewUser(data);
+        if(doa.registerNewUser(data)){
+            return gson.toJson(data, UserData.class);
+        }else{
+            return "{success: false}";
+        } 
     }
 }

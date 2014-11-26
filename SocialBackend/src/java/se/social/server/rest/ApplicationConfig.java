@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(se.social.server.rest.MessageResources.class);
         resources.add(se.social.server.rest.UserResources.class);
     }
     
