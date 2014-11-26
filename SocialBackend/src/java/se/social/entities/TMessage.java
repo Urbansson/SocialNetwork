@@ -6,6 +6,7 @@
 package se.social.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,8 +35,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "TMessage.findAll", query = "SELECT t FROM TMessage t"),
     @NamedQuery(name = "TMessage.findByMessageId", query = "SELECT t FROM TMessage t WHERE t.messageId = :messageId"),
     @NamedQuery(name = "TMessage.findByContent", query = "SELECT t FROM TMessage t WHERE t.content = :content"),
-    @NamedQuery(name = "TMessage.findByReadmessage", query = "SELECT t FROM TMessage t WHERE t.readmessage = :readmessage")})
+    @NamedQuery(name = "TMessage.findByReadmessage", query = "SELECT t FROM TMessage t WHERE t.readmessage = :readmessage"),
+    @NamedQuery(name = "TMessage.getConvo", query = "Select t from TMessage t WHERE (t.sender = :sender or t.reciever = :reciever) or (t.sender = :reciever or t.reciever = :sender) ORDER BY t.sendtime")})
+
+    //@NamedQu
 public class TMessage implements Serializable {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "SENDTIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date sendtime;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -121,6 +133,14 @@ public class TMessage implements Serializable {
     @Override
     public String toString() {
         return "se.social.entities.TMessage[ messageId=" + messageId + " ]";
+    }
+
+    public Date getSendtime() {
+        return sendtime;
+    }
+
+    public void setSendtime(Date sendtime) {
+        this.sendtime = sendtime;
     }
     
 }
