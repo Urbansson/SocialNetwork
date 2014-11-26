@@ -24,7 +24,6 @@ public class UserResources {
 
     @Context
     private UriInfo context;
-
     /**
      * Creates a new instance of UserResources
      */
@@ -49,6 +48,18 @@ public class UserResources {
         return "{success: false}";
     }
     
+    
+        @GET @Path("/getuserbyname/{username}")
+    @Produces("application/json")
+    public String getUserByName(@PathParam("username") String userName) {
+        //TODO return proper representation object
+        //throw new UnsupportedOperationException();
+        
+        if ((userName.equals("teddy"))) {
+            return "{\"userName\":\"Urbansson\",\"firstName\":\"Teddy\",\"lastName\":\"Brandt\",\"email\":\"teddy@brandts.se\",\"password\":\"password\"}";
+        }
+        return "{errorMessage: \"not found\"}";
+    }
     /**
      *
      * @param content
