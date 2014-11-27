@@ -7,6 +7,7 @@ package se.social.dao;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -21,27 +22,58 @@ import se.social.entities.TUser;
  *
  * @author Teddy
  */
-public class MessageDao {
-    
-    private EntityManager em;
+public final class MessageDao {
 
-    public MessageDao() {
+    //private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("SocialBackendPU");
+    //private static EntityManager em  = emf.createEntityManager();
+    private MessageDao() {
+    }
+
+    public static boolean sendMessage(UserMessage message) {
+        boolean returnValue = false;
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SocialBackendPU");
+        EntityManager em = emf.createEntityManager();
+
+        TMessage messagePersist = new TMessage();
+
+        messagePersist.setContent(message.getContent());
+        messagePersist.setSendtime(new Date());
+        try {
+            em.getTransaction().begin();
+
+            Query q = em.createNamedQuery("TUser.findByUsername", TUser.class);
+            TUser sender = (TUser) q.setParameter("username", message.getSender()).getSingleResult();
+            TUser reciever = (TUser) q.setParameter("username", message.getReciever()).getSingleResult();
+
+            messagePersist.setReciever(reciever);
+            messagePersist.setSender(sender);
+
+            em.persist(messagePersist);
+            em.getTransaction().commit();
+            returnValue = true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Error: " + e);
+            returnValue = false;
+        } finally {
+           em.close();
+        }
+
+        return returnValue;
+    }
+
+    @SuppressWarnings("empty-statement")
+    public static Collection<UserMessage> getConvo(String sender, String recivier) {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SocialBackendPU");
-        em = emf.createEntityManager();
-        
-    }
-    
-    @SuppressWarnings("empty-statement")
-    public Collection<UserMessage> getConvo(String sender, String recivier){
-    
-        
+        EntityManager em = emf.createEntityManager();
+
         Collection<UserMessage> returndata = new ArrayList<UserMessage>();
         Collection<TMessage> persistentData = null;
 
         try {
             em.getTransaction().begin();
-           
+
             Query q = em.createNamedQuery("TUser.findByUsername", TUser.class);
             TUser entitySender = (TUser) q.setParameter("username", sender).getSingleResult();
             TUser entityRecivier = (TUser) q.setParameter("username", recivier).getSingleResult();
@@ -51,25 +83,36 @@ public class MessageDao {
 
             q = em.createNamedQuery("TMessage.getConvo", TMessage.class);
             persistentData = q.setParameter("sender", entitySender).setParameter("reciever", entityRecivier).getResultList();
-            
+
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
             persistentData = null;
             System.out.println("Error " + e);
+        } finally {
+           em.close();
         }
-        
-        if(persistentData != null){
-            Iterator<TMessage> i;
+
+        if (persistentData != null) {
             for (TMessage item : persistentData) {
-                UserMessage newItem = new UserMessage(item.getMessageId(),item.getSender().getUsername(),item.getReciever().getUsername(), item.getSendtime(),item.getContent(),item.getReadmessage());
+                System.out.println(item.getMessageId());
+                System.out.println(item.getSender().getUsername());
+
+                System.out.println(item.getReciever().getUsername());
+
+                System.out.println(item.getSendtime());
+
+                System.out.println(item.getContent());
+
+                System.out.println(item.getReadmessage());
+
+                UserMessage newItem = new UserMessage(item.getMessageId(), item.getSender().getUsername(), item.getReciever().getUsername(), item.getSendtime(), item.getContent(), item.getReadmessage());
                 returndata.add(newItem);
-            }   
+            }
             //	public UserMessage(int message_id, int sender, int reciever, Date sendtime, String content, boolean readmessage){
         }
-               
+
         return returndata;
     }
-    
-    
+
 }

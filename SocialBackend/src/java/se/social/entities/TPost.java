@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TPost.findAll", query = "SELECT t FROM TPost t"),
     @NamedQuery(name = "TPost.findByPostId", query = "SELECT t FROM TPost t WHERE t.postId = :postId"),
     @NamedQuery(name = "TPost.findByPublishtime", query = "SELECT t FROM TPost t WHERE t.publishtime = :publishtime"),
-    @NamedQuery(name = "TPost.findByContent", query = "SELECT t FROM TPost t WHERE t.content = :content")})
+    @NamedQuery(name = "TPost.findByContent", query = "SELECT t FROM TPost t WHERE t.content = :content"),
+    @NamedQuery(name = "TPost.findByrecievingwall", query = "SELECT t FROM TPost t WHERE t.recievingwall = :user")})
 public class TPost implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

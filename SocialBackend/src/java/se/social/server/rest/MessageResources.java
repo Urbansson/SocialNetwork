@@ -12,6 +12,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -48,10 +49,10 @@ public class MessageResources {
     public String getConvo(@PathParam("sender") String sender, @PathParam("recivier") String recivier) {
         //TODO return proper representation object
         //throw new UnsupportedOperationException();
-        MessageDao doa = new MessageDao();
+        //MessageDao doa = new MessageDao();
         Gson gson = new Gson();
-       
-        ArrayList<UserMessage> messages = (ArrayList<UserMessage>) doa.getConvo(sender, recivier); 
+        
+        ArrayList<UserMessage> messages = (ArrayList<UserMessage>) MessageDao.getConvo(sender, recivier); 
         
         for(UserMessage item: messages){
             System.out.println(item.getContent());
@@ -65,8 +66,39 @@ public class MessageResources {
      * @param content representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */
-    @PUT
+    
+    @PUT @Path("/sendMessage")
     @Consumes("application/json")
-    public void putJson(String content) {
+    @Produces("application/json")
+    public String sendMessage(String content) {
+        
+        System.out.println("Recived: " + content);
+
+        //MessageDao doa = new MessageDao();
+        Gson gson = new Gson();
+
+        UserMessage message = gson.fromJson(content, UserMessage.class);
+        
+        boolean success =  MessageDao.sendMessage(message);
+        
+        return "{success: "+success+"}";
     }
+    
+    @DELETE @Path("/removeMessage")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public String removeMessage(String content) {
+        
+        System.out.println("Recived: " + content);
+
+        //MessageDao doa = new MessageDao();
+        Gson gson = new Gson();
+
+        UserMessage message = gson.fromJson(content, UserMessage.class);
+        
+        boolean success =  MessageDao.sendMessage(message);
+        
+        return "{success: "+success+"}";
+    }
+    
 }
