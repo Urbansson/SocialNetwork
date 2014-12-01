@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:body>
+
+        <ui:composition template="/templates/main.xhtml">
+
+            <ui:define name="contentPrimary">
+
+                <h:form>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><p:outputLabel value="#{wallBean.user.userName}"></p:outputLabel></h3>
+                                </div>
+                                <div class="panel-body">
+                                    <h4><p:outputLabel value="#{wallBean.user.firstName}"> &nbsp;</p:outputLabel> <p:outputLabel value="#{wallBean.user.lastName}"></p:outputLabel></h4>
+                                    <h4><p:outputLabel value="#{wallBean.user.email}"> </p:outputLabel></h4>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-8">
+
+                            <div class="panel text-right">
+
+                                <div class="panel-body">
+                                    <p:inputTextarea class="form-control" value="#{wallBean.postText}"/>
+                                    <br/>
+                                    <p:commandButton update="allPosts" partialSubmit="true" type="submit" class="btn btn-primary" value="Send" action="#{wallBean.createPost()}" onsuccess=""/>
+
+                                </div>
+                                
+                            </div>
+                            
+                            <h:panelGroup id="allPosts">
+
+                            <ui:repeat value="#{wallBean.posts}" var="tempPost" varStatus="loop">
+                                <div class="panel panel-default">
+    
+                                    <div class="panel-body">
+    
+                                        <p>#{tempPost.publishtime}</p>
+                                        <h4><b>#{tempPost.sender}: </b>#{tempPost.content} <br />
+                                        </h4>
+    
+    <!--
+                                        <ui:repeat value="#{tempPost.comments}" var="tempComment" >
+                                            <hr/>
+    
+                                            <p><b>#{tempComment.sender}: </b>#{tempComment.content}</p>
+                                        </ui:repeat>
+    
+                                        <hr/>
+                                        <div class="panel-body">
+    
+                                                <p:inputTextarea class="form-control" value="2"/>
+                                                <p:commandButton update="" type="submit" class="btn btn-success" value="Comment" action="#{wallBean.createComment(tempPost.postId)}" onsuccess=""/>
+    
+                                        </div>
+    -->
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                            </h:panelGroup>
+                        </div>
+
+                    </div>
+                </h:form>
+
+            </ui:define>
+
+
+
+            <ui:define name="scripts">
+
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+
+</html>

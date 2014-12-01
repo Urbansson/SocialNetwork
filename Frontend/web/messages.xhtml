@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+
+        <ui:composition template="/templates/main.xhtml">
+
+            <ui:define name="contentPrimary">
+
+                <div class="row">
+                    <h:form id="main">
+
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                <div class="panel panel-default">
+
+                                    <div class="panel-body" style="    overflow: auto   ;
+                                         height: 500px;">
+                                        <div class="list-group">
+                                            <a href="#" class="list-group-item active">
+                                                Friends
+                                            </a>
+
+                                            <ui:repeat value="#{userBean.friends}" var="friend" varStatus="loop">
+                                                <p:commandLink update=":main:chat" partialSubmit="true" type="submit" class="list-group-item" value="#{friend.userName}" action="#{messageBean.changePartner(friend.userName)}" onsuccess=""/>
+                                            </ui:repeat>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-9">
+
+                                <div class="panel " id="chat">
+                                    <h:panelGroup id="chat">
+
+                                        <div class="panel-body" >
+
+                                            <div style="    overflow: auto   ; height: 500px;">
+
+                                                <ui:repeat value="#{messageBean.messages}" var="message" varStatus="loop">
+
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <h5>#{message.sender}</h5>
+                                                            #{message.content}
+                                                        </div>
+                                                    </div>
+
+                                                </ui:repeat>
+
+                                            </div>
+                                            <p:inputTextarea class="form-control" value="#{messageBean.message}"/>
+                                            <br/>
+                                            <p:commandButton update=":main:chat" partialSubmit="true" type="submit" class="btn btn-primary" value="Send" action="#{messageBean.sendMessage}" onsuccess=""/>
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+
+                </div>
+
+            </ui:define>
+
+
+
+            <ui:define name="scripts">
+
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+
+</html>

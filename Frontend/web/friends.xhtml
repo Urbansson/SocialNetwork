@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+
+      xmlns:p="http://primefaces.org/ui">
+    <h:body>
+
+        <ui:composition template="/templates/main.xhtml">
+
+            <ui:define name="contentPrimary">
+
+                <h:form id="main">
+                <div class="row">
+
+                    <!--
+                                        <h1>Friend Requests</h1>
+                                        <ui:repeat value="#{userBean.friendRequests}" var="friend" varStatus="loop">
+                                            <p:commandLink  partialSubmit="true" type="submit" class="list-group-item" value="#{friend.userName}" action="#{messageBean.changePartner(friend.userName)}" onsuccess=""/>
+                                        </ui:repeat>
+                    -->
+
+                    <h:panelGroup id="friends">
+
+                        <h1>Friend Requests</h1>
+
+
+                        <div class="panel panel-default">
+                            <!-- List group -->
+                            <ul class="list-group">
+                                <ui:repeat value="#{userBean.friendRequests}" var="friend" varStatus="loop">
+                                    <li class="list-group-item">#{friend.firstName}&nbsp;#{friend.lastName}
+                                        <p:link  style=" margin-left:  15px" type="submit" class="btn btn-primary " value="To wall" outcome="wall.xhtml?user=#{friend.userName}"/>
+
+                                        <p:commandButton update=":main:friends" style=" margin-left:  15px"  partialSubmit="true" type="submit" class="btn btn-success " value="Accept" action="#{userBean.acceptFriendRequest(friend.userName)}"  />
+                                    </li>
+
+                                </ui:repeat>
+                            </ul>
+                        </div>
+
+                        <h1>Friends</h1>
+
+                        <div class="panel panel-default">
+                            <!-- List group -->
+                            <ul class="list-group">
+                                <ui:repeat value="#{userBean.friends}" var="friend" varStatus="loop">
+                                    <li class="list-group-item">#{friend.firstName}&nbsp;#{friend.lastName}
+                                        <p:link  style=" margin-left:  15px" type="submit" class="btn btn-primary " value="To wall" outcome="wall.xhtml?user=#{friend.userName}"/>
+                                    </li>
+
+                                </ui:repeat>
+                            </ul>
+                        </div>
+
+
+
+                    </h:panelGroup>
+
+                <!--<h3><h:outputText value="#{param['id']}" /></h3>-->
+
+
+                </div>
+                </h:form>
+            </ui:define>
+
+
+
+            <ui:define name="scripts">
+
+            </ui:define>
+        </ui:composition>
+
+    </h:body>
+
+</html>
