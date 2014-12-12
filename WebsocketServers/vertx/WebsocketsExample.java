@@ -28,6 +28,8 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.ServerWebSocket;
 import org.vertx.java.platform.Verticle;
 import org.vertx.java.core.json.*;
+import org.vertx.java.core.shareddata.*;
+import java.util.concurrent.ConcurrentMap;
 /*
 	Recieve a JSON String "
 	Check if recv is in listen
@@ -35,65 +37,25 @@ import org.vertx.java.core.json.*;
 */
 
 public class WebsocketsExample extends Verticle {
-	private String datastring = "{\"glossary\": {\"title\": \"example glossary\",\"GlossDiv\": {\"title\": \"S\",\"GlossList\": {\"GlossEntry\": {\"ID\": \"SGML\",\"SortAs\": \"SGML\",\"GlossTerm\": \"Standard Generalized Markup Language\",\"Acronym\": \"SGML\",\"Abbrev\": \"ISO 8879:1986\",\"GlossDef\": {\"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\"GlossSeeAlso\": [\"GML\", \"XML\"]},\"GlossSee\": \"markup\"}}}}}";
-	private String jsonString = "{\"sender\":\"Urbansson\",\"reciver\":\"dolphan\",\"message\":\"Hejsan\"}";
 	private HashMap<String, ServerWebSocket> sender;
 	private ArrayList<ConnectedUser> connectedusers = new ArrayList<ConnectedUser>();
+	private ConcurrentSharedMap<String, ServerWebSocket> userMap;
 	//Called at start
 	
 	public void start() {
-		vertx.createHttpServer().websocketHandler(new Handler<ServerWebSocket>() {
-	//Creates websocket??
-		public void handle(final ServerWebSocket ws) {
-			
-			if (ws.path().equals("/myapp")) {
-			  ws.dataHandler(new Handler<Buffer>() {
-				//Handles data
-				public void handle(Buffer data) {
-				  String incoming = data.toString();
-				  
-				  if(isJsonValid(incoming)){
-					
-					JsonObject toParse = new JsonObject(incoming);
-					connectedusers.add(new ConnectedUser(ws, toParse.getString("sender")));
-					System.out.println("Incoming " + toParse.getString("sender"));
-					
-
-				}
-				  sendMessage("Urbansson","Hejsan");
-				}
-			  });
-			} else {
-			  ws.reject();
-			}
-		  }
-    }).requestHandler(new Handler<HttpServerRequest>() {
-      public void handle(HttpServerRequest req) {
-        if (req.path().equals("/")) req.response().sendFile("websockets/ws.html"); // Serve the html
-      }
-    }).listen(8080);
+		System.out.println("Start");
+		userMap = vertx.sharedData().getMap("chat.users");
+		System.out.println("Map created");
+		System.out.println("Deploying");
+		container.deployVerticle("WebSocket.java");
+		System.out.println("Done");
+		System.out.println("Listening");
+		//container.deployVerticle("Sender.java");
+		//container.deployVerticle("Receiver.java");
   }
   
   public void stop(){
 	System.out.println("Stop");
   }
   
-  public boolean isJsonValid(String test) {
-    try {
-        new JsonObject(test);
-    } catch (Exception ex) {
-        // edited, to include @Arthur's comment
-        // e.g. in case JSONArray is valid as well...
-         return false;
-		}
-    return true;	
-	}
-	//TODO MOVE TO WORKING VERTICLE
-	public void sendMessage(String reciever, String message){
-			for(ConnectedUser usr : connectedusers){
-				if(usr.getUser().equals(reciever)){
-					usr.getConnection().writeTextFrame(message);
-				}
-		}
-	}
 }
