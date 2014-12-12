@@ -1,0 +1,1 @@
+vertx run WebsocketsExample.java -cp ./module/lib/*

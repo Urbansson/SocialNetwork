@@ -1,11 +1,4 @@
 import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.vertx.java.core.Handler;
@@ -16,16 +9,33 @@ import org.vertx.java.platform.Verticle;
 import org.vertx.java.core.json.*;
 import org.vertx.java.core.shareddata.*;
 import java.util.concurrent.ConcurrentMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import snaq.db.ConnectionPool;
-public class WebSocket extends Verticle {
+public class WebSocket extends Verticle  {
 	private HashMap<String, ServerWebSocket> userMap = new HashMap<String, ServerWebSocket>();//vertx.sharedData().getMap("chat.users");
-	private Connection con;
-	private static ConnectionPool POOL = null;
-	
+		
     public void start() {
-	initializeDatabase();
+	try {
+			System.out.println("Trying");
+			Connection con = DriverBridge.getConnection("jdbc:mysql://130.237.84.126:3306/socialnetwork","socialnetwork", "ninjakick");
+			System.out.println("Con is" + con);
+			Statement st = con.createStatement();
+			System.out.println("Statement is" + st);
+			ResultSet rs = st.executeQuery("SELECT T_USER");
+			System.out.println("Res is" + rs);
+			  if (rs.next()) {
+                System.out.println(rs.getString(1));
+            }
+		} catch (Exception e) {
+			
+		}
+	
     vertx.createHttpServer().websocketHandler(new Handler<ServerWebSocket>() {
+		
+		
+	
       public void handle(final ServerWebSocket ws) {
         if (ws.path().equals("/myapp")) {
           ws.dataHandler(new Handler<Buffer>() {
@@ -65,31 +75,6 @@ public class WebSocket extends Verticle {
 		return true;	
 	}
 	
-		private void initializeDatabase() {
-			try {
-				Class<?> clazz = Class.forName(CONFIG.getString("driverClass"));
-					driver = (Driver)clazz.newInstance();
-					DriverManager.registerDriver(driver);
-				
-				// Configure pool of not already done
-				if (POOL == null) {
-					int minPool = 10; //CONFIG.getNumber("minPool").intValue();
-					int maxPool = 10; //CONFIG.getNumber("maxPool").intValue();
-					int maxSize = 10; //CONFIG.getNumber("maxSize").intValue();
-					int idleTimeout = 10;  //CONFIG.getNumber("idleTimeout").intValue();
-					String url = "130.237.84.126"; //CONFIG.getString("jdbcUrl");
-					String username = "root"; //CONFIG.getString("username");
-					String password = "ninjakick"; //CONFIG.getString("password");
-		
-					POOL = new ConnectionPool("LOCALPOOL", minPool, maxPool,
-							maxSize, idleTimeout, url, username, password);
-					//LOG.debug("created new connection pool instance!");
-				}
-		
-			} catch (Exception ex) {
-				//LOG.error("Could not load database driver!", ex);
-		}
-	}
 	
 	
 	public void sendMessage(String reciever, String message){

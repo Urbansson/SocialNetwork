@@ -50,8 +50,7 @@ public class WebsocketsExample extends Verticle {
 		container.deployVerticle("WebSocket.java");
 		System.out.println("Done");
 		System.out.println("Listening");
-		//container.deployVerticle("Sender.java");
-		//container.deployVerticle("Receiver.java");
+		
   }
   
   public void stop(){
