@@ -1,4 +1,3 @@
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.vertx.java.core.Handler;
@@ -12,6 +11,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
 
 public class WebSocket extends Verticle  {
 	private HashMap<String, ServerWebSocket> userMap = new HashMap<String, ServerWebSocket>();//vertx.sharedData().getMap("chat.users");
